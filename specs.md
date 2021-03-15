@@ -1,6 +1,6 @@
 
 # Product Spec Design: easyA
-The easyA app will allow Purdue Students to create and read reviews about their courses. This will allow students to to get an impression of what their peers think of an specific course. This will help students choose which classes to take, and even have a better idea of what their majors will look like in the future. easyA aims to reduce the uncertainity of students trying to choose, majors or tracks inside an specific major.
+The easyA app will allow Purdue Students to create and read reviews about their courses. This will allow students to get an impression of what their peers think of a specific course. This will help students choose which classes to take and even have a better idea of their majors in the future. easyA aims to reduce the uncertainty of students trying to choose majors or tracks inside a specific major.
 
 ## 1. User Stories (Required and Optional)
 
