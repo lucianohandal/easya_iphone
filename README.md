@@ -86,6 +86,62 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 * Add a review
   => Course
 
-**Wire Frames**
+**Wireframes**
 
 ![wireframest](./wireframes.jpg)
+
+## Schema 
+### Models
+#### Review
+
+   | Property      | Type     | Description |
+   | ------------- | -------- | ------------|
+   | objectId      | String   | unique id for the review |
+   | author        | Pointer to User| review author |
+   | course       | Pointer to Course| course reviewed |
+   | date           | DateTime | date when the review was created |
+   | downvotes       | Number   | Number of  downvotes on the post|
+   | upnvotes | Number   | Number of  upvotes on the post |
+   | tags    | String   | Concadination of tags|
+   | text     | String   | the reviews body|
+   | professor     | String   | professor who taught the class |
+   | grade     | String   | grade achieved by the student |
+   | semester     | String   | semester the student took the class |
+   
+   
+#### user
+
+  | Property      | Type     | Description |
+  | ------------- | -------- | ------------|
+  | objectId      | String   | unique id for the review |
+  | email          | String   | the students email|
+  | upvoted      | array of pointers to reviews   | unique id for the review |
+  | downvoted | array of pointers to reviews   | unique id for the review |
+  
+  
+#### course
+
+| Property      | Type     | Description |
+| ------------- | -------- | ------------|
+| objectId      | String     | unique id for the course |
+| courseId     | String     | id assigned by Purdue |
+| name          | String     | Name of the course  |
+| description | String     | Description of the course  |
+| rating          | Number | Average rating of the course  |
+| rewviews    | array of pointers to reviews  | Average rating of the course  |
+
+
+### Networking
+#### List of network requests by screen
+   - Home Feed Screen
+      - (Read/GET) Query all courses that that match the user's input
+   - Create Review Screen
+      - (Create/POST) Create a new post review
+   - Profile Screen
+      - (Read/GET) Query to log out
+      - (Read/GET) Query to reset password
+  - Course Screen
+     - (Read/GET) Query to get course info
+     - (Update/PUT) Toggle upvote
+     - (Update/PUT) Toggle downvote
+     - (Delete) Delete review
