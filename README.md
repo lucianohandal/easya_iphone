@@ -17,7 +17,7 @@ The easyA app will allow Purdue Students to create and read reviews about their 
  * User can add a tags to a review
  * User can add a professor to a review
  * User can add a grade to a review
- * User can add a tags to a review
+ * User can add the semester they took the course to a review
  * User can find most Purdue courses
  * User can add only one review per course
  * User can delete their review
