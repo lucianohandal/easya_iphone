@@ -6,12 +6,24 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct easyaApp: App {
+    init(){
+        FirebaseApp.configure()
+        LoginState.load()
+    }
+    
     var body: some Scene {
+        
         WindowGroup {
-            ContentView()
+            if LoginState.logged_in ?? false {
+                ContentView()
+            } else {
+                LoginView()
+            }
         }
+        
     }
 }
