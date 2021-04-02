@@ -19,7 +19,7 @@ struct easyaApp: App {
         
         WindowGroup {
             if LoginState.logged_in ?? false {
-                ContentView()
+                HomeView()
             } else {
                 LoginView()
             }

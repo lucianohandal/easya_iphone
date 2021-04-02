@@ -10,19 +10,21 @@ import Firebase
 import FirebaseAuth
 
 struct SignupView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @State private var email_or_username = ""
     @State private var username = ""
     @State private var email = ""
     @State private var password = ""
     @State private var confirm_psw = ""
     @State var error_msg = ""
-    @State var loginSuccess = false
+    @State var signupSuccess = false
     
     var body: some View {
         NavigationView {
             VStack() {
                 Spacer()
-
+                
                 Text("easyA")
                     .font(.title)
                     .padding()
@@ -42,31 +44,39 @@ struct SignupView: View {
                         .padding(.leading)
                 }
                 Text(error_msg)
-                NavigationLink(destination: signupMsg(), isActive: $loginSuccess) {
+                NavigationLink(destination: LoginView(), isActive: $signupSuccess) {
                     Button(action: {
                         signup()
                     }) {
                         Text("Sign Up")
                             .padding()
+                            .navigationBarTitle("")
+                            .navigationBarHidden(true)
                             .frame(width: 300, height: 50)
-                    }.padding()
+                    }
+                    .padding()
                 }
-
+                
                 
                 
                 Spacer()
                 HStack(spacing: 0) {
                     Text("Already have an account? ")
                     NavigationLink(destination: LoginView()) {
-                        Text("Sign Up")
+                        Text("Log in")
+                            .navigationBarTitle("")
+                            .navigationBarHidden(true)
                     }
                 }
                 Spacer()
-
+                
             }
         }
+        .navigationBarTitle("")
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
     }
-
+    
     
     func validateInfo() -> Bool {
         let p_email_reg = try! NSRegularExpression(pattern: "[^@ \t\r\n]+@purdue.edu")
@@ -109,20 +119,48 @@ struct SignupView: View {
         return true
     }
     
+    func sendVerificationMail() {
+        if Auth.auth().currentUser != nil && !Auth.auth().currentUser!.isEmailVerified {
+            Auth.auth().currentUser!.sendEmailVerification(completion: { (error) in
+                // Notify the user that the mail has sent or couldn't because of an error.
+            })
+        }
+        else {
+            // Either the user is not available, or the user is already verified.
+        }
+    }
+    
     func signup() {
         print(email, password)
         if (!validateInfo()){
             return
         }
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-                    if error != nil {
-                        print(error?.localizedDescription ?? "")
-                        error_msg = "Cannot sign up"
-                    } else {
-                        print("Sign up successful")
-                        loginSuccess = true
-                    }
-        }
+        Auth.auth().createUser(withEmail: email, password: password, completion: { user, error in
+            
+            if let firebaseError = error {
+                print(firebaseError.localizedDescription)
+                return
+            }
+            
+            print("Sign up successful")
+            LoginState.showLoginAlert = true
+            LoginState.alertTitle = "Thank you for signing up!"
+            LoginState.alertText = "Please confirm your email to log in"
+            signupSuccess = true
+            sendVerificationMail()
+            Firestore.firestore().collection("users").document(username).setData([
+                "email": email,
+                "group": "student",
+            ]) { err in
+                if let err = err {
+                    print("Error writing document: \(err)")
+                } else {
+                    print("Document successfully written!")
+                }
+            }
+        })
+        
+        
     }
     
 }
