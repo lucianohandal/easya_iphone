@@ -13,7 +13,7 @@ import FirebaseAuth
 
 struct LoginView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
+    
     @State private var email_or_username = ""
     @State private var e_or_u = ""
     @State private var username = ""
@@ -27,17 +27,21 @@ struct LoginView: View {
     @State private var alertText = ""
     
     
+    
     var body: some View {
+        
         NavigationView {
             VStack() {
+                
                 Spacer()
-
-                Text("easyA")
-                    .font(.title)
-                    .padding()
                     .alert(isPresented: $showAlert) {
                         Alert(title: Text(alertTitle), message: Text(alertText) , dismissButton: .default(Text("Ok")))
                     }
+//                Image("logo").padding()
+                Text("easyA")
+                    .font(.title)
+                    .padding()
+                
                 
                 VStack(alignment: .leading, spacing: 15) {
                     TextField("Email or Career ID", text: $e_or_u)
@@ -67,7 +71,7 @@ struct LoginView: View {
                             .frame(width: 300, height: 50)
                     }.padding()
                 }
-
+                
                 
                 
                 Spacer()
@@ -80,8 +84,9 @@ struct LoginView: View {
                     }
                 }
                 Spacer()
-
+                
             }
+//            .background(Color("BackgroundColor"))
             .onAppear {
                 initLogin()
             }
@@ -97,7 +102,7 @@ struct LoginView: View {
         alertTitle = LoginState.alertTitle ?? ""
         alertText = LoginState.alertText ?? ""
     }
-
+    
     func setVars() {
         email_or_username = e_or_u
         email_or_username = email_or_username.lowercased()
@@ -110,7 +115,7 @@ struct LoginView: View {
             username = email_or_username
             email = username + "@purdue.edu"
         }
-
+        
     }
     func getGroup(username: String) -> String{
         let response = getUser()
@@ -125,19 +130,19 @@ struct LoginView: View {
         print("Logging in \(email) with password \(password)")
         
         Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
-                    if error != nil {
-                        print(error?.localizedDescription ?? "")
-                        alertTitle = "Could not log in"
-                        alertText = error?.localizedDescription ?? ""
-                        showAlert = true
-                    } else {
-                        loginSuccess = true
-                        LoginState.logged_in = true
-                        LoginState.username = username
-                        LoginState.email = email
-                        LoginState.group = getGroup(username: username)
-                        print("success")
-                    }
+            if error != nil {
+                print(error?.localizedDescription ?? "")
+                alertTitle = "Could not log in"
+                alertText = error?.localizedDescription ?? ""
+                showAlert = true
+            } else {
+                loginSuccess = true
+                LoginState.logged_in = true
+                LoginState.username = username
+                LoginState.email = email
+                LoginState.group = getGroup(username: username)
+                print("success")
+            }
         }
     }
 }
