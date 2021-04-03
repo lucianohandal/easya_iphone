@@ -10,6 +10,13 @@ import Foundation
 import Firebase
 import FirebaseAuth
 
+let colorBg = UIColor(red: 22, green: 22, blue: 22, alpha: 1)
+let colorTxt = UIColor(red: 221, green: 221, blue: 221, alpha: 1)
+let colorAcc = UIColor(red: 251, green: 176, blue: 59, alpha: 1)
+let colorMuted = UIColor(red: 194, green: 194, blue: 194, alpha: 1)
+
+
+
 
 var base_url = "http://127.0.0.1:3000/"
 var error_reaching_dict = ["result": "error",

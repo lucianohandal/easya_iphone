@@ -81,10 +81,12 @@ struct LoginView: View {
                 }
                 Spacer()
 
-            }.onAppear {
+            }
+            .onAppear {
                 initLogin()
             }
         }
+        
         .navigationBarTitle("")
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
