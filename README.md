@@ -6,8 +6,8 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 
 **Required Must-have Stories**
 
- [X] User can sign up
- [X] User can log in
+ - [x] User can sign up
+ - [X] User can log in
  [X] User can log out
  [X] User can reset their password
  [ ] User can search for an specific course and see its reviews
