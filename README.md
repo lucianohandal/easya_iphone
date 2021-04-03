@@ -6,62 +6,62 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 
 **Required Must-have Stories**
 
--[X] User can sign up
--[X] User can log in
--[X] User can log out
--[X] User can reset their password
--[ ] User can search for an specific course and see its reviews
--[ ] User can add a review to a course
--[ ] User can add a rating to a review
--[ ] User can add a comment to a review
--[ ] User can add a tags to a review
--[ ] User can add a professor to a review
--[ ] User can add a grade to a review
--[ ] User can add the semester they took the course to a review
--[X] User can find most Purdue courses
--[ ] User can add only one review per course
--[ ] User can delete their review
--[ ] User can upvote a review
--[ ] User can downvote a review
--[X] All user are Purdue students
+- [x] User can sign up
+- [x] User can log in
+- [x] User can log out
+- [x] User can reset their password
+- [ ] User can search for an specific course and see its reviews
+- [] User can add a review to a course
+- [] User can add a rating to a review
+- [] User can add a comment to a review
+- [] User can add a tags to a review
+- [] User can add a professor to a review
+- [] User can add a grade to a review
+- [] User can add the semester they took the course to a review
+- [x] User can find most Purdue courses
+- [] User can add only one review per course
+- [] User can delete their review
+- [] User can upvote a review
+- [] User can downvote a review
+- [x] All user are Purdue students
 
 
 **Optional Nice-to-have Stories**
 
--[ ] User gets auto-complete suggestions when searching for a course
--[ ] User can share a post
--[ ] User can report a post
--[ ] User can share a course
--[ ] User can filter reviews on a course (by professor, tags, etc)
--[ ] User can sort reviews on a course (by date, ratings, upvortes, downboates, etc)
--[ ] User can edit a review
--[ ] User can contact administrators
--[ ] App has a dark/light mode
+- [] User gets auto-complete suggestions when searching for a course
+- [] User can share a post
+- [] User can report a post
+- [] User can share a course
+- [] User can filter reviews on a course (by professor, tags, etc)
+- [] User can sort reviews on a course (by date, ratings, upvortes, downboates, etc)
+- [] User can edit a review
+- [] User can contact administrators
+- [] App has a dark/light mode
 
 
 ## 2. Screen Archetypes
 
  * Login Screen
-  -[ ] User can login
-  -[ ] User can reset their password
+  - [] User can login
+  - [] User can reset their password
  * Signup Screen
-  -[ ] User can sign up
+  - [] User can sign up
 * Home Screen
- -[ ] User can search for a course
+ - [] User can search for a course
 * Course Screen
- -[ ] User can see reviews
- -[ ] User can upvote/downvote reviews
- -[ ] User can add a review to a course
+ - [] User can see reviews
+ - [] User can upvote/downvote reviews
+ - [] User can add a review to a course
 * New Review Screen
- -[ ] User can add a tags to a review
- -[ ] User can add a rating to a review
- -[ ] User can add a comment to a review
- -[ ] User can add a professor to a review
- -[ ] User can add a grade to a review
- -[ ] User can add a tags to a review
+ - [] User can add a tags to a review
+ - [] User can add a rating to a review
+ - [] User can add a comment to a review
+ - [] User can add a professor to a review
+ - [] User can add a grade to a review
+ - [] User can add a tags to a review
 [ ] User Screen
- -[ ] User can log out
- -[ ] User can reset their password
+ - [] User can log out
+ - [] User can reset their password
 
 ## 3. Navigation
 
@@ -69,7 +69,7 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 
  * Home/Search
  * Add a review
--[ ] User
+- [] User
 
 **Flow Navigation** (Screen to Screen)
 
