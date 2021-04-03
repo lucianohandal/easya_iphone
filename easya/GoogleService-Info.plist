@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>433093614161-8qf93bn71ubbk2lbf8cajgsipabucpsm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.433093614161-8qf93bn71ubbk2lbf8cajgsipabucpsm</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAcKmqK2v8GKVT-tYKyctAP-g0ze-cwiHE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>433093614161</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>handal.easya</string>
+	<key>PROJECT_ID</key>
+	<string>easya-purdue</string>
+	<key>STORAGE_BUCKET</key>
+	<string>easya-purdue.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:433093614161:ios:93e21a562d95809978f670</string>
+	<key>DATABASE_URL</key>
+	<string>https://easya-purdue.firebaseio.com</string>
+</dict>
+</plist>
