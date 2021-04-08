@@ -37,9 +37,10 @@ struct LoginView: View {
                     .alert(isPresented: $showAlert) {
                         Alert(title: Text(alertTitle), message: Text(alertText) , dismissButton: .default(Text("Ok")))
                     }
-//                Image("logo").padding()
-                Text("easyA")
-                    .font(.title)
+                
+                Image("logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .padding()
                 
                 
@@ -86,12 +87,11 @@ struct LoginView: View {
                 Spacer()
                 
             }
-//            .background(Color("BackgroundColor"))
+            .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
             .onAppear {
                 initLogin()
             }
         }
-        
         .navigationBarTitle("")
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)

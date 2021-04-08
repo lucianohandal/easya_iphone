@@ -14,8 +14,11 @@
 		1C0BD6792617D024007437E4 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0BD6782617D024007437E4 /* ResetPasswordView.swift */; };
 		1C0BD67A2617D024007437E4 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0BD6782617D024007437E4 /* ResetPasswordView.swift */; };
 		1C0BD67B2617D024007437E4 /* ResetPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0BD6782617D024007437E4 /* ResetPasswordView.swift */; };
+		1C39EE92261BC66000780845 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C39EE91261BC66000780845 /* SearchView.swift */; };
+		1C39EE9F261BC72800780845 /* AddReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C39EE9E261BC72800780845 /* AddReviewView.swift */; };
+		1C39EEA7261BC77D00780845 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C39EEA6261BC77D00780845 /* UserView.swift */; };
+		1C39EEB2261BC9A900780845 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1C39EEB1261BC9A900780845 /* Launch Screen.storyboard */; };
 		1C97FC6F261285F700B36D99 /* easyaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C97FC6E261285F700B36D99 /* easyaApp.swift */; };
-		1C97FC71261285F700B36D99 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C97FC70261285F700B36D99 /* ContentView.swift */; };
 		1C97FC73261285F800B36D99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C97FC72261285F800B36D99 /* Assets.xcassets */; };
 		1C97FC76261285F800B36D99 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1C97FC75261285F800B36D99 /* Preview Assets.xcassets */; };
 		1C97FC81261285F800B36D99 /* easyaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C97FC80261285F800B36D99 /* easyaTests.swift */; };
@@ -50,9 +53,12 @@
 		1C075A7626167E4F006C9BD1 /* easyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = easyAPI.swift; sourceTree = "<group>"; };
 		1C0BD65726179E8D007437E4 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		1C0BD6782617D024007437E4 /* ResetPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordView.swift; sourceTree = "<group>"; };
+		1C39EE91261BC66000780845 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		1C39EE9E261BC72800780845 /* AddReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddReviewView.swift; sourceTree = "<group>"; };
+		1C39EEA6261BC77D00780845 /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
+		1C39EEB1261BC9A900780845 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		1C97FC6B261285F700B36D99 /* easya.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = easya.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C97FC6E261285F700B36D99 /* easyaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = easyaApp.swift; sourceTree = "<group>"; };
-		1C97FC70261285F700B36D99 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1C97FC72261285F800B36D99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1C97FC75261285F800B36D99 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1C97FC7C261285F800B36D99 /* easyaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = easyaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,10 +138,13 @@
 			children = (
 				1C97FC6E261285F700B36D99 /* easyaApp.swift */,
 				1CC5061D261532D300CDD490 /* LoginState.swift */,
+				1C39EEB1261BC9A900780845 /* Launch Screen.storyboard */,
 				1CC5061526152D1800CDD490 /* LoginView.swift */,
 				1C0BD6782617D024007437E4 /* ResetPasswordView.swift */,
 				1C0BD65726179E8D007437E4 /* HomeView.swift */,
-				1C97FC70261285F700B36D99 /* ContentView.swift */,
+				1C39EE91261BC66000780845 /* SearchView.swift */,
+				1C39EE9E261BC72800780845 /* AddReviewView.swift */,
+				1C39EEA6261BC77D00780845 /* UserView.swift */,
 				1CC50625261542F500CDD490 /* SignupView.swift */,
 				1C97FC72261285F800B36D99 /* Assets.xcassets */,
 				1CF3A9D42618DEC2001375B7 /* Info.plist */,
@@ -307,6 +316,7 @@
 			files = (
 				1C97FC76261285F800B36D99 /* Preview Assets.xcassets in Resources */,
 				1C97FC73261285F800B36D99 /* Assets.xcassets in Resources */,
+				1C39EEB2261BC9A900780845 /* Launch Screen.storyboard in Resources */,
 				1CC5061126152CF000CDD490 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -452,11 +462,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C39EEA7261BC77D00780845 /* UserView.swift in Sources */,
 				1CC5061626152D1800CDD490 /* LoginView.swift in Sources */,
+				1C39EE92261BC66000780845 /* SearchView.swift in Sources */,
 				1C0BD65826179E8D007437E4 /* HomeView.swift in Sources */,
 				1CC5061E261532D300CDD490 /* LoginState.swift in Sources */,
 				1C0BD6792617D024007437E4 /* ResetPasswordView.swift in Sources */,
-				1C97FC71261285F700B36D99 /* ContentView.swift in Sources */,
+				1C39EE9F261BC72800780845 /* AddReviewView.swift in Sources */,
 				1C075A7726167E4F006C9BD1 /* easyAPI.swift in Sources */,
 				1C97FC6F261285F700B36D99 /* easyaApp.swift in Sources */,
 				1CC50626261542F500CDD490 /* SignupView.swift in Sources */,

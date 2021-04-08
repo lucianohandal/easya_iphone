@@ -33,19 +33,6 @@ func convertToDictionary(text: String) -> [String: Any]? {
     return nil
 }
 
-//func getRequest(endpoint: String, data[String : Any]) -> [String : Any]{
-//    let url = URL(string: base_url + endpoint)!
-//    var ret = error_reaching_dict
-//
-//    let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-//        guard let data = data else {return}
-//        ret = convertToDictionary(text: String(data: data, encoding: .utf8)!) ?? error_reaching_dict
-//    }
-//
-//    task.resume()
-//    return ret
-//}
-
 func getUser() -> [String : Any]{
     //    getRequest("get_user", ["username": "lhandal"])
     return ["result": "success",
@@ -82,17 +69,6 @@ func resetPassword(email: String) {
     LoginState.alertTitle = "Reset email sent"
     LoginState.alertText = "Please go to the link on your email to reset the password"
 }
-
-//func dictToJSONstr(dict: [String:Any]){
-//    if let theJSONData = try? JSONSerialization.data(
-//        withJSONObject: dict,
-//        options: []) {
-//        let theJSONText = String(data: theJSONData,
-//                                   encoding: .ascii)
-//        print("JSON string = \(theJSONText!)")
-//        return theJSONText
-//    }
-//}
 
 func sendPostRequest(endpoint: String, data: [String:Any]){
     let url_str = base_url + endpoint
@@ -160,5 +136,38 @@ func courseAutoComplete(course: String) -> String{
     }
     task.resume()
     while ret_val == "" {}
+    return ret_val
+}
+
+
+
+func getCourseDict(course: String) -> [String: Any]{
+    let url_str = base_url + "course/" + course
+    print(url_str)
+    let url = URL(string: url_str)!
+    var request = URLRequest(url: url)
+    let sess = ["username": LoginState.username, "group": LoginState.group]
+    print(sess)
+    request.httpBody = try? JSONSerialization.data(withJSONObject: sess)
+    request.httpMethod = "POST"
+    
+    var ret_val : [String: Any] = [:]
+    
+    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        if ((data) != nil){
+            print(String(data: data!, encoding: .utf8) ?? ".")
+            let json = try? JSONSerialization.jsonObject(with: data!, options: [])
+            ret_val = (json as? [String: Any])!
+        }
+        if ((response) != nil){
+//            print("response", response!)
+        }
+        if ((error) != nil){
+            print("error", error!)
+        }
+    }
+    task.resume()
+    while ret_val.count == 0 {}
+    print(ret_val)
     return ret_val
 }
