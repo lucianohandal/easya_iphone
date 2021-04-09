@@ -36,7 +36,7 @@ struct Review {
         self.report_count = report_count
         
         
-        self.professor_link  = URL(string: professor_link)!
+        self.professor_link  = URL(string: professor_link) ?? URL(string: "https://www.ratemyprofessors.com")!
     }
 }
 
@@ -218,17 +218,31 @@ struct SearchView: View {
         
         let intKeys = ["upvotes",
                        "downvotes",
-                       "professor",
                        "rating",
                        "report_count"]
         
         for key in strKeys{
-            if (p[key] == nil) {
+            if (p[key] == nil){
+                p[key] = ""
+                continue
+            }
+            if let str = p[key] as? String {
+                if str == "<null>"{
+                    p[key] = ""
+                }
+            }
+            else {
                 p[key] = ""
             }
         }
         for key in intKeys{
             if (p[key] == nil) {
+                p[key] = 0
+                continue
+            }
+            if (p[key] as? Int) != nil {
+                continue
+            } else {
                 p[key] = 0
             }
         }

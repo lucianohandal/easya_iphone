@@ -28,13 +28,13 @@ struct HomeView: View {
                     .tabItem {
                         Image(systemName: "plus.circle.fill")
                     }
-                    .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+//                    .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
                 
                 UserView()
                     .tabItem {
                         Image(systemName: "person.circle.fill")
                     }
-                    .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+//                    .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
             }
         }
         .navigationBarTitle("")

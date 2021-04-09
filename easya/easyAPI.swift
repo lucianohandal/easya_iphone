@@ -70,28 +70,36 @@ func resetPassword(email: String) {
     LoginState.alertText = "Please go to the link on your email to reset the password"
 }
 
-func sendPostRequest(endpoint: String, data: [String:Any]){
+func sendPostRequest(endpoint: String, data: [String:Any]) -> [String: Any]{
     let url_str = base_url + endpoint
     let url = URL(string: url_str)!
     var request = URLRequest(url: url)
     request.httpMethod = "POST"
     request.httpBody = try? JSONSerialization.data(withJSONObject: data)
     
-    print(url_str, data)
+    var ret_val : [String: Any] = [:]
+    print(data)
     let task = URLSession.shared.dataTask(with: request) { data, response, error in
         if ((data) != nil){
-            print("data", data!)
+            print(String(data: data!, encoding: .utf8) ?? ".")
+            let json = try? JSONSerialization.jsonObject(with: data!, options: [])
+            ret_val = (json as? [String: Any])!
         }
         if ((response) != nil){
-            print("response", response!)
+//            print("response", response!)
         }
         if ((error) != nil){
             print("error", error!)
         }
     }
     task.resume()
+    while ret_val.count == 0 {}
+    print(ret_val)
+    return ret_val
     
 }
+
+
 
 func sendGetRequest(endpoint: String){
     let url_str = base_url + endpoint
@@ -170,4 +178,9 @@ func getCourseDict(course: String) -> [String: Any]{
     while ret_val.count == 0 {}
     print(ret_val)
     return ret_val
+}
+
+func addReview(course: String, review: [String: Any]) -> [String: Any]{
+    let endpoint = "new_review/\(course)"
+    return sendPostRequest(endpoint: endpoint, data: review)
 }
