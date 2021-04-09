@@ -151,4 +151,3 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 Here's a walkthrough of implemented user stories:
 
 ![ ](ezgif.com-video-to-gif.gif)
-![ ](ezgif.com-video-to-gif2.gif)
