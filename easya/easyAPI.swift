@@ -184,3 +184,15 @@ func addReview(course: String, review: [String: Any]) -> [String: Any]{
     let endpoint = "new_review/\(course)"
     return sendPostRequest(endpoint: endpoint, data: review)
 }
+
+func upvotePost(postID: String) -> [String: Any] {
+    let endpoint = "upvote"
+    return sendPostRequest(endpoint: endpoint, data: ["username": LoginState.username!, "group": LoginState.group!, "post_ID": postID])
+}
+
+func downvotePost(postID: String) -> [String: Any]  {
+    let endpoint = "downvote"
+    return sendPostRequest(endpoint: endpoint, data: ["username": LoginState.username!, "group": LoginState.group!, "post_ID": postID])
+    
+}
+

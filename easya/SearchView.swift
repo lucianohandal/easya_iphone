@@ -16,27 +16,33 @@ struct Review {
     var text: String
     var semester: String
     var date: String
+    var id: String
     var professor_link: URL
     var upvotes: Int
     var downvotes: Int
     var rating: Int
     var report_count: Int
+    var upvote: Bool
+    var downvote: Bool
     
-    init(author: String, grade: String, professor: String, text: String, semester: String, date: String, professor_link: String, upvotes: Int, downvotes: Int, rating: Int, report_count: Int) {
+    init(post: [String:Any]) {
+        self.author = post["author"] as! String
+        self.grade = post["grade"] as! String
+        self.professor = post["professor"] as! String
+        self.text = post["text"] as! String
+        self.semester = post["semester_taken"] as! String
+        self.date = post["display_date"] as! String
+        self.id = post["post_ID"] as! String
+        self.upvotes = post["upvotes"] as! Int
+        self.downvotes = post["downvotes"] as! Int
+        self.rating = post["rating"] as! Int
+        self.report_count = post["report_count"] as! Int
+        self.upvote = post["upvote"] as! Bool
+        self.downvote = post["downvote"] as! Bool
         
-        self.author = author
-        self.grade = grade
-        self.professor = professor
-        self.text = text
-        self.semester = semester
-        self.date = date
-        self.upvotes = upvotes
-        self.downvotes = downvotes
-        self.rating = rating
-        self.report_count = report_count
+        self.professor_link  = URL(string: post["professor_link"] as! String) ?? URL(string: "https://www.ratemyprofessors.com")!
         
         
-        self.professor_link  = URL(string: professor_link) ?? URL(string: "https://www.ratemyprofessors.com")!
     }
 }
 
@@ -149,8 +155,20 @@ struct SearchView: View {
                                     
                                     
                                     HStack{
-                                        Text("\(reviews[i].upvotes)")
-                                        Text("\(reviews[i].downvotes)")
+                                        Button(action: {
+                                            upvoteReview(i: i)
+                                        }) {
+                                            Text("\(reviews[i].upvotes)")
+                                            
+                                            Image(systemName: reviews[i].upvote ? "hand.thumbsup.fill" : "hand.thumbsup")
+                                        }
+                                        Button(action: {
+                                            downvoteReview(i: i)
+                                        }) {
+                                            Text("\(reviews[i].downvotes)")
+                                            Image(systemName: reviews[i].downvote ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                                        }.padding(.horizontal)
+                                        
                                         Spacer()
                                         HStack{
                                             ForEach((1...reviews[i].rating), id: \.self){ _ in
@@ -214,12 +232,16 @@ struct SearchView: View {
                        "text",
                        "semester_taken",
                        "display_date",
-                       "professor_link"]
+                       "professor_link",
+                       "tags",
+                       "post_ID"]
         
         let intKeys = ["upvotes",
                        "downvotes",
                        "rating",
-                       "report_count"]
+                       "report_count",
+                       "upvote",
+                       "downvote"]
         
         for key in strKeys{
             if (p[key] == nil){
@@ -253,21 +275,38 @@ struct SearchView: View {
         for p in posts{
             let post = sanitizePost(post: p)
             print(post)
-            
-            let rev = Review(author: post["author"] as! String,
-                             grade: post["grade"] as! String,
-                             professor: post["professor"] as! String,
-                             text: post["text"] as! String,
-                             semester: post["semester_taken"] as! String,
-                             date: post["display_date"] as! String,
-                             professor_link: post["professor_link"] as! String,
-                             upvotes: post["upvotes"] as! Int,
-                             downvotes: post["downvotes"] as! Int
-                             ,
-                             rating: post["rating"] as! Int,
-                             report_count: post["report_count"] as! Int)
-            reviews.append(rev)
+            reviews.append(Review(post: post))
         }
+    }
+    
+    func upvoteReview(i: Int){
+        if (reviews[i].upvote){
+            reviews[i].upvotes -= 1
+        } else {
+            reviews[i].upvotes += 1
+            if (reviews[i].downvote){
+                reviews[i].downvotes -= 1
+                reviews[i].downvote = false
+            }
+        }
+        reviews[i].upvote = !reviews[i].upvote
+        upvotePost(postID: reviews[i].id)
+//        print("upvoteReview", reviews[i].id)
+    }
+    
+    func downvoteReview(i: Int){
+        if (reviews[i].downvote){
+            reviews[i].downvotes -= 1
+        } else {
+            reviews[i].downvotes += 1
+            if (reviews[i].upvote){
+                reviews[i].upvotes -= 1
+                reviews[i].upvote = false
+            }
+        }
+        reviews[i].downvote = !reviews[i].downvote
+        downvotePost(postID: reviews[i].id)
+//        print("downvoteReview", reviews[i].id)
     }
 }
 
