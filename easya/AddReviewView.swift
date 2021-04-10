@@ -21,9 +21,12 @@ struct AddReviewView: View {
     @State private var last_found = ""
     @State var fillStars = [false, false, false, false, false]
     
+    @State private var showAlert = false
+    @State private var alertTitle = ""
+    @State private var alertText = ""
     @State private var allowSubmit = false
     
-    let strengths = ["None",
+    let grades = ["None",
                      "A+", "A", "A-",
                      "B+", "B", "B-",
                      "C+", "C", "C-",
@@ -34,6 +37,7 @@ struct AddReviewView: View {
     
     
     var body: some View {
+        
         
         ScrollView(.vertical){
             VStack(alignment: .leading){
@@ -52,6 +56,9 @@ struct AddReviewView: View {
                     
                     
                 }.padding()
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text(alertTitle), message: Text(alertText) , dismissButton: .default(Text("Ok")))
+                }
                 
                 TextField("Professor", text: $professor)
                     .onChange(of: professor) {_ in
@@ -60,7 +67,7 @@ struct AddReviewView: View {
                     .padding()
                 
                 Picker(selectedGrade, selection: $selectedGrade) {
-                    ForEach(strengths, id: \.self) {
+                    ForEach(grades, id: \.self) {
                         Text($0)
                     }
                 }
@@ -123,12 +130,27 @@ struct AddReviewView: View {
         allowSubmit = course == last_found && professor != "" && rating != 0
     }
     
+    func resetFields(){
+        course = ""
+        professor = ""
+        text = placeholder
+        selectedGrade = "Grade"
+        selectedSemester = "Semester"
+        year = NumbersOnly()
+        rating = 0
+        last_found = ""
+        fillStars = [false, false, false, false, false]
+        allowSubmit = false
+    }
+    
     func submitReview(){
         var reviewDict: [String: Any] = [
             "username": LoginState.username!,
             "group": LoginState.group!,
             "course_id": course,
             "professor": professor,
+            "text": "",
+            "tags": "",
             "rating": rating]
        
         if selectedGrade != "Grade" {
@@ -148,8 +170,17 @@ struct AddReviewView: View {
         }
     
         print(reviewDict)
-        print(addReview(course: course, review: reviewDict))
+        let response = addReview(course: course, review: reviewDict)
+        print(response)
         
+        if (response["code"] != nil && response["code"] as! Int == 400 && response["msg"] != nil && response["msg"] as! String == "Existing review") {
+            
+            alertTitle = "Existing review"
+            alertText = "You have already reviewed this class. Only one review per student is allowed"
+            showAlert = true
+        }
+        
+        resetFields()
     }
     
 }

@@ -41,7 +41,7 @@ struct LoginView: View {
                 Image("logo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .padding()
+                    .padding([.leading, .bottom, .trailing], 100.0)
                 
                 
                 VStack(alignment: .leading, spacing: 15) {
@@ -87,7 +87,7 @@ struct LoginView: View {
                 Spacer()
                 
             }
-            .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+//            .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
             .onAppear {
                 initLogin()
             }

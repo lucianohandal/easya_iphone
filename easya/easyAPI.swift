@@ -196,3 +196,8 @@ func downvotePost(postID: String) -> [String: Any]  {
     
 }
 
+func deletePost(postID: String) -> [String: Any] {
+    let endpoint = "delete_review"
+    return sendPostRequest(endpoint: endpoint, data: ["username": LoginState.username!, "group": LoginState.group!, "post_ID": postID])
+}
+

@@ -24,6 +24,7 @@ struct Review {
     var report_count: Int
     var upvote: Bool
     var downvote: Bool
+    var delete: Bool
     
     init(post: [String:Any]) {
         self.author = post["author"] as! String
@@ -39,6 +40,7 @@ struct Review {
         self.report_count = post["report_count"] as! Int
         self.upvote = post["upvote"] as! Bool
         self.downvote = post["downvote"] as! Bool
+        self.delete = post["delete"] as! Bool
         
         self.professor_link  = URL(string: post["professor_link"] as! String) ?? URL(string: "https://www.ratemyprofessors.com")!
         
@@ -64,6 +66,7 @@ struct Course {
 
 struct SearchView: View {
     @State private var course = ""
+    @State private var courseID = ""
     @State private var courseFound: Bool = false
     @State private var posts: Array<[String : Any]> = []
     
@@ -82,7 +85,8 @@ struct SearchView: View {
                 Button(action: {
                     id = ""
                     reviews = []
-                    getCourseInfo(course_id:courseAutoComplete(course: course))
+                    courseID = courseAutoComplete(course: course)
+                    getCourseInfo(course_id: courseID)
                     getPosts()
                     
                 }) {
@@ -137,6 +141,17 @@ struct SearchView: View {
                         if (reviews.count > 0){
                             ForEach(0...reviews.count - 1, id: \.self){i in
                                 VStack(alignment: .leading){
+                                    if (reviews[i].delete) {
+                                        HStack{
+                                            Text("Your review")
+                                                .fontWeight(.bold)
+                                            Spacer()
+                                            Button(action: {deleteReview(reviewId: reviews[i].id)}) {
+                                                Text("Delete")
+                                            }
+                                        }
+                                        .padding(.vertical)
+                                    }
                                     HStack{
                                         Text("Professor: \(reviews[i].professor)")
                                         Spacer()
@@ -211,6 +226,12 @@ struct SearchView: View {
         }
         
     }
+    func deleteReview(reviewId: String){
+        deletePost(postID: reviewId)
+        reviews = []
+        getCourseInfo(course_id: courseID)
+        getPosts()
+    }
     func getCourseInfo(course_id: String){
         var course_dict = getCourseDict(course: course_id)
         
@@ -241,7 +262,8 @@ struct SearchView: View {
                        "rating",
                        "report_count",
                        "upvote",
-                       "downvote"]
+                       "downvote",
+                       "delete"]
         
         for key in strKeys{
             if (p[key] == nil){
