@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Firebase
-import FirebaseAuth
+//import FirebaseAuth
 
 struct Review {
     var author: String
@@ -68,7 +68,6 @@ struct SearchView: View {
     @State private var course = ""
     @State private var courseID = ""
     @State private var courseFound: Bool = false
-    @State private var posts: Array<[String : Any]> = []
     
     @State private var id = ""
     @State private var name = ""
@@ -87,7 +86,6 @@ struct SearchView: View {
                     reviews = []
                     courseID = courseAutoComplete(course: course)
                     getCourseInfo(course_id: courseID)
-                    getPosts()
                     
                 }) {
                     Text("Go")
@@ -227,22 +225,70 @@ struct SearchView: View {
         
     }
     func deleteReview(reviewId: String){
-        deletePost(postID: reviewId)
-        reviews = []
-        getCourseInfo(course_id: courseID)
-        getPosts()
+        let db = Firestore.firestore()
+        db.collection("posts").document(reviewId).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+                getCourseInfo(course_id: courseID)
+                reviews = []
+            }
+        }
+        
+        
     }
     func getCourseInfo(course_id: String){
-        var course_dict = getCourseDict(course: course_id)
+        let db = Firestore.firestore()
         
-        if (course_dict["posts"] == nil){
-            course_dict["posts"] = []
+        let courseRef = db.collection("courses").document(course_id)
+        courseRef.getDocument { (courseDoc, error) in
+            if let courseDoc = courseDoc, courseDoc.exists {
+                let course_dict = courseDoc.data() as [String: Any]?
+                id = course_dict?["course_id"] as! String
+                name = course_dict?["course_name"] as! String
+                description = course_dict?["description"] as! String
+                let postRef = db.collection("posts").whereField("course", isEqualTo: courseRef)
+                var reviewsNum : Int = 0
+                postRef.getDocuments() { (querySnapshot, err) in
+                            if let err = err {
+                                print("Error getting documents: \(err)")
+                            } else {
+                                reviewsNum = querySnapshot?.count ?? 0
+                                print(reviewsNum)
+                                for postDoc in querySnapshot!.documents {
+                                    print("\(postDoc.documentID) => \(postDoc.data())")
+                                   
+                                    var post: [String: Any] = postDoc.data()
+                                    post["delete"] = Bool(post["author"] as? String == LoginState.userRef || LoginState.group == "admin")
+                                    post["post_ID"] = postDoc.documentID
+                                    let fireTime : Timestamp = post["posted_date"] as! Timestamp
+                                    let dateFormatter = DateFormatter()
+                                    dateFormatter.dateStyle = .medium
+                                    dateFormatter.timeStyle = .none
+                                    dateFormatter.locale = Locale(identifier: "en_US")
+                                    post["posted_date"] = dateFormatter.string(from: fireTime.dateValue())
+                                    post = sanitizePost(post: post)
+                                    print(postDoc.documentID)
+                                    post["upvote"] = LoginState.upvotes?.contains(postDoc.documentID)
+                                    post["downvote"] = LoginState.downvotes?.contains(postDoc.documentID)
+                                    
+                                    print(post)
+                                    let review = Review(post: post)
+                                    reviews.append(review)
+                                    rating += review.rating
+                                }
+                            }
+                    }
+                if (reviewsNum > 1){
+                    rating = Int(rating/reviewsNum)
+                }
+                
+            } else {
+                print("Document does not exist")
+            }
         }
-        id = course_dict["id"] as! String
-        name = course_dict["name"] as! String
-        description = course_dict["description"] as! String
-        rating = course_dict["rating"] as! Int
-        posts = course_dict["posts"] as! Array<[String : Any]>
+        
     }
     
     func sanitizePost(post: [String: Any]) -> [String: Any] {
@@ -260,10 +306,7 @@ struct SearchView: View {
         let intKeys = ["upvotes",
                        "downvotes",
                        "rating",
-                       "report_count",
-                       "upvote",
-                       "downvote",
-                       "delete"]
+                       "report_count"]
         
         for key in strKeys{
             if (p[key] == nil){
@@ -293,42 +336,67 @@ struct SearchView: View {
         return p
     }
     
-    func getPosts(){
-        for p in posts{
-            let post = sanitizePost(post: p)
-            print(post)
-            reviews.append(Review(post: post))
+    func votesToStr(arr: [String]) -> String{
+        var str = "["
+        var first = true
+        for e in arr{
+            if (first){
+                str = str + "'\(e)'"
+                first = false
+            } else {
+                str = str + "',\(e)'"
+            }
         }
+        str = str + "]"
+        return str
     }
     
     func upvoteReview(i: Int){
-        if (reviews[i].upvote){
+        let db = Firestore.firestore()
+        if (reviews[i].upvote){ // already upvoted
             reviews[i].upvotes -= 1
-        } else {
+            LoginState.upvotes?.removeAll(where: { $0 == reviews[i].id})
+        } else {// new like
             reviews[i].upvotes += 1
-            if (reviews[i].downvote){
+            if (LoginState.upvotes == nil){
+                LoginState.upvotes = []
+            }
+            LoginState.upvotes?.append(reviews[i].id)
+            
+            if (reviews[i].downvote){// downvoted before
                 reviews[i].downvotes -= 1
                 reviews[i].downvote = false
+                LoginState.downvotes?.removeAll(where: { $0 == reviews[i].id})
+                db.collection("users").document(LoginState.username!).setData([ "downvoted": votesToStr(arr: LoginState.downvotes!) ], merge: true)
             }
         }
+        db.collection("users").document(LoginState.username!).setData([ "upvoted": votesToStr(arr: LoginState.upvotes ?? []) ], merge: true)
         reviews[i].upvote = !reviews[i].upvote
-        upvotePost(postID: reviews[i].id)
-//        print("upvoteReview", reviews[i].id)
     }
     
     func downvoteReview(i: Int){
-        if (reviews[i].downvote){
+        let db = Firestore.firestore()
+        if (reviews[i].downvote){ // already downvoted
             reviews[i].downvotes -= 1
-        } else {
+            LoginState.downvotes?.removeAll(where: { $0 == reviews[i].id})
+        } else { // new downvote
             reviews[i].downvotes += 1
-            if (reviews[i].upvote){
+            if (LoginState.downvotes == nil){
+                LoginState.downvotes = []
+            }
+            LoginState.downvotes?.append(reviews[i].id)
+            
+            if (reviews[i].upvote){ // upvoted before
                 reviews[i].upvotes -= 1
                 reviews[i].upvote = false
+                LoginState.upvotes?.removeAll(where: { $0 == reviews[i].id})
+                db.collection("users").document(LoginState.username!).setData([ "upvoted": votesToStr(arr: LoginState.upvotes ?? []) ], merge: true)
             }
         }
+        
+        db.collection("users").document(LoginState.username!).setData([ "downvoted": votesToStr(arr: LoginState.downvotes!) ], merge: true)
+        
         reviews[i].downvote = !reviews[i].downvote
-        downvotePost(postID: reviews[i].id)
-//        print("downvoteReview", reviews[i].id)
     }
 }
 

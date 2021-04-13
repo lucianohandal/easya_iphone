@@ -6,16 +6,40 @@
 //
 
 import Foundation
+import Firebase
+
+
 
 struct LoginState {
     private static var loggedInKey: String = "logged_in"
     private static var usernameKey: String = "username"
     private static var emailKey: String = "email"
     private static var groupKey: String = "group"
+    private static var upvotesKey: String = "upvotes"
+    private static var downvotesKey: String = "downvotes"
+    private static var userRefKey: String = "userRef"
     
     private static var showLoginAlertKey: String = "showLoginAlert"
     private static var alertTitleKey: String = "alertTitle"
     private static var alertTextKey: String = "alertText"
+    
+    static var userRef: String? {
+        didSet {
+            UserDefaults.standard.setValue(userRef, forKey: userRefKey)
+        }
+    }
+    
+    static var upvotes: [String]? {
+        didSet {
+            UserDefaults.standard.setValue(upvotes, forKey: upvotesKey)
+        }
+    }
+    
+    static var downvotes: [String]? {
+        didSet {
+            UserDefaults.standard.setValue(downvotes, forKey: downvotesKey)
+        }
+    }
     
     static var logged_in: Bool? {
         didSet {
@@ -66,6 +90,9 @@ struct LoginState {
         self.username = UserDefaults.standard.string(forKey: Self.usernameKey)
         self.email = UserDefaults.standard.string(forKey: Self.emailKey)
         self.group = UserDefaults.standard.string(forKey: Self.groupKey)
+        self.userRef = UserDefaults.standard.string(forKey: Self.userRefKey)
+        self.upvotes = UserDefaults.standard.array(forKey: Self.upvotesKey) as? [String]
+        self.downvotes = UserDefaults.standard.array(forKey: Self.downvotesKey) as? [String]
         self.showLoginAlert = false
         self.alertTitle = ""
         self.alertText = ""

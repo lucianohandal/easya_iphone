@@ -148,7 +148,8 @@ struct SignupView: View {
             LoginState.alertText = "Please confirm your email to log in"
             signupSuccess = true
             sendVerificationMail()
-            Firestore.firestore().collection("users").document(username).setData([
+            let db = Firestore.firestore()
+            db.collection("users").document(username).setData([
                 "email": email,
                 "group": "student",
             ]) { err in

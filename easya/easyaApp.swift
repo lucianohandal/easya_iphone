@@ -13,6 +13,7 @@ struct easyaApp: App {
     init(){
         FirebaseApp.configure()
         LoginState.load()
+        print("init")
     }
     
     var body: some Scene {

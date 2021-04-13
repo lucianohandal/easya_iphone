@@ -10,11 +10,11 @@
 import SwiftUI
 import Firebase
 import FirebaseAuth
+import FirebaseFirestore
 
 struct LoginView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State private var email_or_username = ""
     @State private var e_or_u = ""
     @State private var username = ""
     @State private var email = ""
@@ -104,7 +104,7 @@ struct LoginView: View {
     }
     
     func setVars() {
-        email_or_username = e_or_u
+        var email_or_username = e_or_u
         email_or_username = email_or_username.lowercased()
         let regex = try! NSRegularExpression(pattern: "[^@ \t\r\n]+@purdue.edu")
         let range = NSRange(location: 0, length: email_or_username.utf16.count)
@@ -117,15 +117,7 @@ struct LoginView: View {
         }
         
     }
-    func getGroup(username: String) -> String{
-        let response = getUser()
-        print(response)
-        if (response["code"] as! Int == 200){
-            let user_data = response["msg"] as! [String: Any]
-            return user_data["group"] as! String
-        }
-        return "failed"
-    }
+    
     func login() {
         print("Logging in \(email) with password \(password)")
         
@@ -136,11 +128,26 @@ struct LoginView: View {
                 alertText = error?.localizedDescription ?? ""
                 showAlert = true
             } else {
-                loginSuccess = true
-                LoginState.logged_in = true
-                LoginState.username = username
-                LoginState.email = email
-                LoginState.group = getGroup(username: username)
+                let db = Firestore.firestore()
+                let userRef = db.collection("users").document(username)
+                userRef.getDocument() { (userData, err) in
+                            if let err = err {
+                                print("Error getting documents: \(err)")
+                            } else {
+                                let user_dict = userData?.data() as [String: Any]?
+                                if (user_dict?["downvoted"] != nil){
+                                    LoginState.downvotes = voteStrToArr(str: user_dict?["downvoted"] as! String)
+                                }
+                                if (user_dict?["upvoted"] != nil){
+                                    LoginState.upvotes = voteStrToArr(str: user_dict?["upvoted"] as! String)
+                                }
+                                LoginState.userRef = userRef as? String
+                                LoginState.username = username
+                                LoginState.email = email
+                                LoginState.logged_in = true
+                                loginSuccess = true
+                            }
+                    }
                 print("success")
             }
         }

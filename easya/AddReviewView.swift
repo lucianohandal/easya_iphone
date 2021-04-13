@@ -144,11 +144,25 @@ struct AddReviewView: View {
     }
     
     func submitReview(){
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(LoginState.username!)
+        let courseRef = db.collection("courses").document(course)
+        let timestamp = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_US")
+        
         var reviewDict: [String: Any] = [
-            "username": LoginState.username!,
-            "group": LoginState.group!,
+            "author": userRef,
+            "course": courseRef,
             "course_id": course,
             "professor": professor,
+            "posted_date": timestamp,
+            "display_date": dateFormatter.string(from: timestamp),
+            "report_count": 0,
+            "downvotes": 0,
+            "upvotes": 0,
             "text": "",
             "tags": "",
             "rating": rating]
@@ -168,22 +182,40 @@ struct AddReviewView: View {
         if text != placeholder {
             reviewDict["text"] = text
         }
-    
-        print(reviewDict)
-        let response = addReview(course: course, review: reviewDict)
-        print(response)
         
-        if (response["code"] != nil && response["code"] as! Int == 400 && response["msg"] != nil && response["msg"] as! String == "Existing review") {
-            
-            alertTitle = "Existing review"
-            alertText = "You have already reviewed this class. Only one review per student is allowed"
-            showAlert = true
+        let postCollection = db.collection("posts")
+        
+       postCollection
+            .whereField("author", isEqualTo: userRef)
+            .whereField("course", isEqualTo: courseRef)
+        .getDocuments() { (querySnapshot, err) in
+                if let err = err {
+                    print("Error getting documents: \(err)")
+                } else {
+                    if (querySnapshot!.documents.count == 0){
+                        postCollection.document().setData(reviewDict) { err in
+                            if let err = err {
+                                print("Error writing document: \(err)")
+                            } else {
+                                print("Document successfully written!")
+                            }
+                        }
+                    } else {
+                        exisitingReviewAlert()
+                    }
+                }
         }
-        
         resetFields()
     }
     
+    func exisitingReviewAlert(){
+        alertTitle = "Existing review"
+        alertText = "You have already reviewed this class. You can delete your old review if you want to write a new one"
+        showAlert = true
+    }
+    
 }
+
 
 class NumbersOnly: ObservableObject {
     @Published var value = "" {
