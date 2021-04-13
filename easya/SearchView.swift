@@ -260,8 +260,12 @@ struct SearchView: View {
                                     print("\(postDoc.documentID) => \(postDoc.data())")
                                    
                                     var post: [String: Any] = postDoc.data()
-                                    post["delete"] = Bool(post["author"] as? String == LoginState.userRef || LoginState.group == "admin")
                                     post["post_ID"] = postDoc.documentID
+                                    post["delete"] = LoginState.userposts?.contains(post["post_ID"] as! String)
+                                    
+                                   
+                                    
+                                    
                                     let fireTime : Timestamp = post["posted_date"] as! Timestamp
                                     let dateFormatter = DateFormatter()
                                     dateFormatter.dateStyle = .medium

@@ -9,20 +9,7 @@ import Foundation
 
 import Firebase
 import FirebaseAuth
-//import FirebaseFirestore
 
-
-//
-//let colorBg = UIColor(red: 22, green: 22, blue: 22, alpha: 1)
-//let colorTxt = UIColor(red: 221, green: 221, blue: 221, alpha: 1)
-//let colorAcc = UIColor(red: 251, green: 176, blue: 59, alpha: 1)
-//let colorMuted = UIColor(red: 194, green: 194, blue: 194, alpha: 1)
-
-
-var base_url = "http://127.0.0.1:3000/"
-var error_reaching_dict = ["result": "error",
-                           "code": 000,
-                           "msg": "could not reach the server"] as [String : Any]
 func convertToDictionary(text: String) -> [String: Any]? {
     if let data = text.data(using: .utf8) {
         do {
@@ -61,58 +48,6 @@ func resetPassword(email: String) {
     LoginState.showLoginAlert = true
     LoginState.alertTitle = "Reset email sent"
     LoginState.alertText = "Please go to the link on your email to reset the password"
-}
-
-func sendPostRequest(endpoint: String, data: [String:Any]) -> [String: Any]{
-    let url_str = base_url + endpoint
-    let url = URL(string: url_str)!
-    var request = URLRequest(url: url)
-    request.httpMethod = "POST"
-    request.httpBody = try? JSONSerialization.data(withJSONObject: data)
-    
-    var ret_val : [String: Any] = [:]
-    print(data)
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        if ((data) != nil){
-            print(String(data: data!, encoding: .utf8) ?? ".")
-            let json = try? JSONSerialization.jsonObject(with: data!, options: [])
-            ret_val = (json as? [String: Any])!
-        }
-        if ((response) != nil){
-//            print("response", response!)
-        }
-        if ((error) != nil){
-            print("error", error!)
-        }
-    }
-    task.resume()
-    while ret_val.count == 0 {}
-    print(ret_val)
-    return ret_val
-    
-}
-
-
-
-func sendGetRequest(endpoint: String){
-    let url_str = base_url + endpoint
-    let url = URL(string: url_str)!
-    var request = URLRequest(url: url)
-    request.httpMethod = "GET"
-    
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        if ((data) != nil){
-            print("data", data!)
-        }
-        if ((response) != nil){
-            print("response", response!)
-        }
-        if ((error) != nil){
-            print("error", error!)
-        }
-    }
-    task.resume()
-    
 }
 
 func voteStrToArr(str: String) -> [String]{
@@ -169,101 +104,3 @@ func courseAutoComplete(course: String) -> String{
 }
 
 
-
-func getCourseDict(course: String) -> [String: Any]{
-    print("hello")
-//    Firestore.enableLogging(true)
-    let db = Firestore.firestore()
-    
-    var courseDict = [String: Any]()
-    let docRef = db.collection("professors").document("76STY86jCVQZReo5230z")
-
-
-    docRef.getDocument { (document, error) in
-        if let document = document, document.exists {
-            let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-            courseDict["data"] = dataDescription
-            print("Document data: \(dataDescription)")
-        } else {
-            print("Document does not exist")
-        }
-    }
-    while courseDict.count == 0 {}
-    return courseDict
-    
-//    let url_str = base_url + "course/" + course
-//    print(url_str)
-//    let url = URL(string: url_str)!
-//    var request = URLRequest(url: url)
-//    let sess = ["username": LoginState.username, "group": LoginState.group]
-//    print(sess)
-//    request.httpBody = try? JSONSerialization.data(withJSONObject: sess)
-//    request.httpMethod = "POST"
-//
-//    var ret_val : [String: Any] = [:]
-//
-//    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//        if ((data) != nil){
-//            print(String(data: data!, encoding: .utf8) ?? ".")
-//            let json = try? JSONSerialization.jsonObject(with: data!, options: [])
-//            ret_val = (json as? [String: Any])!
-//        }
-//        if ((response) != nil){
-////            print("response", response!)
-//        }
-//        if ((error) != nil){
-//            print("error", error!)
-//        }
-//    }
-//    task.resume()
-//    while ret_val.count == 0 {}
-//    print(ret_val)
-//    return ret_val
-}
-
-func addReview(course: String, review: [String: Any]) -> [String: Any]{
-    let endpoint = "new_review/\(course)"
-    return sendPostRequest(endpoint: endpoint, data: review)
-}
-
-func upvotePost(postID: String) -> [String: Any] {
-    let endpoint = "upvote"
-    return sendPostRequest(endpoint: endpoint, data: ["username": LoginState.username!, "group": LoginState.group!, "post_ID": postID])
-}
-
-func downvotePost(postID: String) -> [String: Any]  {
-    let endpoint = "downvote"
-    return sendPostRequest(endpoint: endpoint, data: ["username": LoginState.username!, "group": LoginState.group!, "post_ID": postID])
-    
-}
-
-func deletePost(postID: String) -> [String: Any] {
-    let endpoint = "delete_review"
-    return sendPostRequest(endpoint: endpoint, data: ["username": LoginState.username!, "group": LoginState.group!, "post_ID": postID])
-}
-
-func getGroup(username: String) -> String{
-    return "student"
-    let url_str = base_url + "get_group/" + username
-    let url = URL(string: url_str)!
-    var request = URLRequest(url: url)
-    request.httpMethod = "GET"
-    
-    var ret_val = ""
-    
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
-        if ((data) != nil){
-            ret_val = String(data: data!, encoding: .utf8) ?? "."
-            print("data", ret_val)
-        }
-        if ((response) != nil){
-//            print("response", response!)
-        }
-        if ((error) != nil){
-            print("error", error!)
-        }
-    }
-    task.resume()
-    while ret_val == "" {}
-    return ret_val
-}

@@ -25,9 +25,10 @@ struct SignupView: View {
             VStack() {
                 Spacer()
                 
-                Text("easyA")
-                    .font(.title)
-                    .padding()
+                Image("logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding([.leading, .bottom, .trailing], 100.0)
                 
                 VStack(alignment: .leading, spacing: 15) {
                     TextField("Email or Career ID", text: $email_or_username)

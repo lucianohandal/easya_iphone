@@ -18,6 +18,7 @@ struct LoginState {
     private static var upvotesKey: String = "upvotes"
     private static var downvotesKey: String = "downvotes"
     private static var userRefKey: String = "userRef"
+    private static var userpostsKey: String = "userposts"
     
     private static var showLoginAlertKey: String = "showLoginAlert"
     private static var alertTitleKey: String = "alertTitle"
@@ -26,6 +27,12 @@ struct LoginState {
     static var userRef: String? {
         didSet {
             UserDefaults.standard.setValue(userRef, forKey: userRefKey)
+        }
+    }
+    
+    static var userposts: [String]? {
+        didSet {
+            UserDefaults.standard.setValue(userposts, forKey: userpostsKey)
         }
     }
     
@@ -93,6 +100,7 @@ struct LoginState {
         self.userRef = UserDefaults.standard.string(forKey: Self.userRefKey)
         self.upvotes = UserDefaults.standard.array(forKey: Self.upvotesKey) as? [String]
         self.downvotes = UserDefaults.standard.array(forKey: Self.downvotesKey) as? [String]
+        self.userposts = UserDefaults.standard.array(forKey: Self.userpostsKey) as? [String]
         self.showLoginAlert = false
         self.alertTitle = ""
         self.alertText = ""

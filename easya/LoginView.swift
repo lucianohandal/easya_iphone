@@ -87,7 +87,7 @@ struct LoginView: View {
                 Spacer()
                 
             }
-//            .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+            //            .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
             .onAppear {
                 initLogin()
             }
@@ -131,23 +131,38 @@ struct LoginView: View {
                 let db = Firestore.firestore()
                 let userRef = db.collection("users").document(username)
                 userRef.getDocument() { (userData, err) in
-                            if let err = err {
-                                print("Error getting documents: \(err)")
-                            } else {
-                                let user_dict = userData?.data() as [String: Any]?
-                                if (user_dict?["downvoted"] != nil){
-                                    LoginState.downvotes = voteStrToArr(str: user_dict?["downvoted"] as! String)
+                    if let err = err {
+                        print("Error getting documents: \(err)")
+                    } else {
+                        let user_dict = userData?.data() as [String: Any]?
+                        if (user_dict?["downvoted"] != nil){
+                            LoginState.downvotes = voteStrToArr(str: user_dict?["downvoted"] as! String)
+                        }
+                        if (user_dict?["upvoted"] != nil){
+                            LoginState.upvotes = voteStrToArr(str: user_dict?["upvoted"] as! String)
+                        }
+                        var userposts = [String]()
+                        db.collection("posts")
+                            .whereField("author", isEqualTo: userRef)
+                            .getDocuments() { (querySnapshot, err) in
+                                if let err = err {
+                                    print("Error getting documents: \(err)")
+                                } else {
+                                    for document in querySnapshot!.documents {
+                                        userposts.append(document.documentID)
+                                    }
+                                    LoginState.userposts = userposts
+                                    print(LoginState.userposts!)
                                 }
-                                if (user_dict?["upvoted"] != nil){
-                                    LoginState.upvotes = voteStrToArr(str: user_dict?["upvoted"] as! String)
-                                }
-                                LoginState.userRef = userRef as? String
-                                LoginState.username = username
-                                LoginState.email = email
-                                LoginState.logged_in = true
-                                loginSuccess = true
                             }
+                        
+                        LoginState.userRef = String(describing: userRef)
+                        LoginState.username = username
+                        LoginState.email = email
+                        LoginState.logged_in = true
+                        loginSuccess = true
                     }
+                }
                 print("success")
             }
         }
