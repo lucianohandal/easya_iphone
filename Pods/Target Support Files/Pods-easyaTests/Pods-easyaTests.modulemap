@@ -1,6 +1,0 @@
-framework module Pods_easyaTests {
-  umbrella header "Pods-easyaTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
