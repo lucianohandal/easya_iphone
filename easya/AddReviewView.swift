@@ -65,12 +65,13 @@ struct AddReviewView: View {
                         validateReview()
                     }
                     .padding()
-                
-                Picker(selectedGrade, selection: $selectedGrade) {
+                Picker(selection: $selectedGrade, label: Text(selectedGrade), content: {
                     ForEach(grades, id: \.self) {
                         Text($0)
                     }
-                }
+
+                })
+                .frame(width: 100, alignment: .leading)
                 .pickerStyle(MenuPickerStyle())
                 .padding()
                 
@@ -87,6 +88,12 @@ struct AddReviewView: View {
                 }.padding()
                 
                 TextEditor(text: $text)
+                    .foregroundColor(self.text == placeholder ? .gray : .primary)
+                    .onTapGesture {
+                        if self.text == placeholder {
+                            self.text = ""
+                        }
+                    }
                     .frame(minWidth: 0, minHeight: 0)
                     .multilineTextAlignment(.leading)
                     .padding()
@@ -193,13 +200,18 @@ struct AddReviewView: View {
                     print("Error getting documents: \(err)")
                 } else {
                     if (querySnapshot!.documents.count == 0){
-                        postCollection.document().setData(reviewDict) { err in
+                        let postRef = postCollection.addDocument(data: reviewDict) { err in
                             if let err = err {
                                 print("Error writing document: \(err)")
                             } else {
                                 print("Document successfully written!")
                             }
                         }
+                        if (LoginState.userposts == nil){
+                            LoginState.userposts = [String]()
+                        }
+                        LoginState.userposts?.append(postRef.documentID as String)
+                        print(postRef.documentID)
                     } else {
                         exisitingReviewAlert()
                     }

@@ -20,21 +20,25 @@ struct HomeView: View {
                     .tabItem {
                         Image(systemName: "magnifyingglass.circle.fill")
                     }
-//                    .padding(.top, 40.0)
-//                    .edgesIgnoringSafeArea(.top)
-//                    .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+                    .navigationBarTitle("")
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
                 
                 AddReviewView()
                     .tabItem {
                         Image(systemName: "plus.circle.fill")
                     }
-//                    .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+                    .navigationBarTitle("")
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
                 
                 UserView()
                     .tabItem {
                         Image(systemName: "person.circle.fill")
                     }
-//                    .background(Color("BackgroundColor").edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/))
+                    .navigationBarTitle("")
+                    .navigationBarHidden(true)
+                    .navigationBarBackButtonHidden(true)
             }
         }
         .navigationBarTitle("")

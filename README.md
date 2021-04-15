@@ -18,10 +18,9 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 - [x] User can add a grade to a review
 - [x] User can add the semester they took the course to a review
 - [x] User can find most Purdue courses
-- [ ] User can add only one review per course
-- [ ] User can delete their review
-- [ ] User can upvote a review
-- [ ] User can downvote a review
+- [x] User can add only one review per course
+- [x] User can upvote a review
+- [x] User can downvote a review
 - [x] All user are Purdue students
 
 
@@ -36,6 +35,7 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 - [ ] User can edit a review
 - [ ] User can contact administrators
 - [ ] App has a dark/light mode
+- [ ] User can delete their review
 
 
 ## 2. Screen Archetypes
