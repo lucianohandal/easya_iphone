@@ -10,6 +10,9 @@ import Firebase
 import FirebaseAuth
 
 struct UserView: View {
+    @Binding var tabSelection: Int
+    @Binding var current_course: String
+    
     @State private var logoutSuccess = false
     @State private var careerID = "lhandal"
     @State var reviews : [Review] = []
@@ -54,7 +57,7 @@ struct UserView: View {
             } else {
                 ScrollView(.vertical){
                     ForEach(0...reviews.count - 1, id: \.self){i in
-                        ReviewCell(review: reviews[i]).padding(.vertical)
+                        ReviewCell(review: reviews[i], tabSelection: $tabSelection, current_course: $current_course).padding(.vertical)
                     }
                     Spacer()
                 }
@@ -74,14 +77,18 @@ struct UserView: View {
                     if let err = err {
                         print("Error getting documents: \(err)")
                     } else {
+                        reviews = []
                         for postDoc in querySnapshot!.documents {
                             var post: [String: Any] = postDoc.data()
                             post["post_ID"] = postDoc.documentID
                             post["delete"] = true
                             post["userScreen"] = true
                             post["posted_date"] = ""
+                            let course_ref :DocumentReference = post["course"] as! DocumentReference
+                            post["course_id"] = course_ref.documentID
                             post = sanitizePost(post: post)
                             print(postDoc.documentID)
+                            
                             post["upvote"] = LoginState.upvotes?.contains(postDoc.documentID)
                             post["downvote"] = LoginState.downvotes?.contains(postDoc.documentID)
                             
@@ -95,9 +102,9 @@ struct UserView: View {
     }
 }
 
-struct UserView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserView()
-    }
-}
+//struct UserView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UserView(tabSelection: <#Binding<Int>#>)
+//    }
+//}
 

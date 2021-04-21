@@ -105,6 +105,7 @@ func courseAutoComplete(course: String) -> String{
 
 func deleteReview(reviewId: String){
     let db = Firestore.firestore()
+    print(reviewId)
     db.collection("posts").document(reviewId).delete() { err in
         if let err = err {
             print("Error removing document: \(err)")

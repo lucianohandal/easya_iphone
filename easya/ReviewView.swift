@@ -53,6 +53,10 @@ struct Review {
 
 struct ReviewCell: View {
     @State var review: Review
+    @Binding var tabSelection: Int
+    @Binding var current_course: String
+    
+    
     @State var visible: Bool = true
     
     var body: some View {
@@ -62,15 +66,23 @@ struct ReviewCell: View {
                     if (review.delete) {
                         HStack{
                             if (review.userScreen){
-                                Text(review.course_id).fontWeight(.bold)
+                                Button(action: {
+                                    self.current_course = review.course_id
+                                    self.tabSelection = 1
+                                }) {
+                                    Text(review.course_id).fontWeight(.bold)
+                                }
                             } else {
                                 Text("Your review").fontWeight(.bold)
                             }
                             Spacer()
                             Button(action: {
                                 deleteReview(reviewId: review.id)
+                                self.current_course = review.course_id
+//                                let tempTab = self.tabSelection
+//                                self.tabSelection = 2
+//                                self.tabSelection = tempTab
                                 visible = false
-                                
                             }) {
                                 Text("Delete")
                             }
@@ -81,13 +93,13 @@ struct ReviewCell: View {
                             Text("Professor:")
                                 .font(.caption)
                             Text(review.professor)
-                        }.padding(.vertical, 2.0).padding(.horizontal)
+                        }.padding(.vertical, 2.0)
                         Spacer()
                         Text(review.date)
                             .font(.caption)
                             .multilineTextAlignment(.trailing)
                         
-                    }
+                    }.padding(.horizontal)
                     if (review.grade != ""){
                         VStack(alignment: .leading){
                             Text("Grade:").font(.caption)
@@ -158,7 +170,7 @@ struct ReviewCell: View {
                             }
                             
                         }
-                    }
+                    }.padding(.horizontal)
                 }
                 .padding(.all)
                 .background(Color("BackgroundColor"))

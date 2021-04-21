@@ -26,6 +26,9 @@ struct Course {
 
 
 struct SearchView: View {
+    @Binding var tabSelection: Int
+    @Binding var current_course: String
+    
     @State private var course = ""
     @State private var courseID = ""
     @State private var courseFound: Bool = false
@@ -37,6 +40,11 @@ struct SearchView: View {
     
     @State var reviews : [Review] = []
     
+    @State private var showAlert = false
+    @State private var alertTitle = ""
+    @State private var alertText = ""
+    @State private var allowSubmit = false
+    
     
     var body: some View {
         VStack(){
@@ -47,11 +55,22 @@ struct SearchView: View {
                     id = ""
                     reviews = []
                     courseID = courseAutoComplete(course: course)
-                    getCourseInfo(course_id: courseID)
+                    course = courseID
+                    if (courseID.isEmpty){
+                        alertTitle = "Course Not Found"
+                        alertText = "Sorry, we could not found the course you are looking for. Please try another one."
+                        showAlert = true
+                    } else {
+                        getCourseInfo(course_id: courseID)
+                    }
+                    
                     
                 }) {
                     Text("Go")
                 }
+            }
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text(alertTitle), message: Text(alertText) , dismissButton: .default(Text("Ok")))
             }
             .padding()
             .background(Color("BackgroundColor"))
@@ -77,14 +96,14 @@ struct SearchView: View {
                                 if (reviews.count > 0){
                                     HStack{
                                         Spacer()
-                                        if (rating > 0){
-                                            ForEach((1...rating), id: \.self){ _ in
+                                        if ((rating/reviews.count) > 0){
+                                            ForEach((1...(rating/reviews.count)), id: \.self){ _ in
                                                 Image(systemName: "star.fill")
                                                     .foregroundColor(Color("AccentColor"))
                                             }
                                         }
-                                        if (rating < 5){
-                                            ForEach((1...(5 - rating)), id: \.self){ _ in
+                                        if ((rating/reviews.count) < 5){
+                                            ForEach((1...(5 - (rating/reviews.count))), id: \.self){ _ in
                                                 Image(systemName: "star")
                                                     .foregroundColor(Color("AccentColor"))
                                             }
@@ -100,7 +119,7 @@ struct SearchView: View {
                         .cornerRadius(16)
                         if (reviews.count > 0){
                             ForEach(0...reviews.count - 1, id: \.self){i in
-                                ReviewCell(review: reviews[i])
+                                ReviewCell(review: reviews[i], tabSelection: $tabSelection, current_course: $current_course)
                             }
                             Spacer()
                         } else{
@@ -108,11 +127,12 @@ struct SearchView: View {
                             VStack{
                                 Text("No reviews yet.")
                                     .font(.title)
-                                Text("Be the first one to review this class")
-                                Image(systemName: "arrow.down")
-                                    .font(.title)
-                                    .foregroundColor(Color("AccentColor"))
-                                    .padding(.top)
+                                Button(action: {
+                                    self.tabSelection = 2
+                                    self.current_course = courseID
+                                }) {
+                                    Text("Write the first one!")
+                                }
                             }
                             Spacer()
                         }
@@ -123,9 +143,18 @@ struct SearchView: View {
                 Spacer()
             }
             
-            
-            
-        }.padding(.horizontal, 16.0)
+        }.onAppear {
+            if (!current_course.isEmpty){
+                reviews = []
+                rating = 0
+                course = current_course
+                courseID = current_course
+                current_course = ""
+                
+                getCourseInfo(course_id: courseID)
+            }
+        }
+        .padding(.all, 16.0)
         
     }
     
@@ -154,13 +183,6 @@ struct SearchView: View {
                             post["post_ID"] = postDoc.documentID
                             post["delete"] = LoginState.userposts?.contains(post["post_ID"] as! String)
                             post["userScreen"] = false
-                            
-//                            let fireTime : Timestamp = post["posted_date"] as! Timestamp
-//                            let dateFormatter = DateFormatter()
-//                            dateFormatter.dateStyle = .medium
-//                            dateFormatter.timeStyle = .none
-//                            dateFormatter.locale = Locale(identifier: "en_US")
-//                            post["posted_date"] = dateFormatter.string(from: fireTime.dateValue())
                             post = sanitizePost(post: post)
                             print(postDoc.documentID)
                             post["upvote"] = LoginState.upvotes?.contains(postDoc.documentID)
@@ -173,9 +195,9 @@ struct SearchView: View {
                         }
                     }
                 }
-                if (reviewsNum > 1){
-                    rating = Int(rating/reviewsNum)
-                }
+//                if (reviewsNum > 1){
+//                    rating = Int(rating/reviewsNum)
+//                }
                 
             } else {
                 print("Document does not exist")
@@ -187,10 +209,10 @@ struct SearchView: View {
 
 
 
-
-struct SearhView_Previews: PreviewProvider {
-    static var previews: some View {
-        SearchView()
-    }
-}
-
+//
+//struct SearhView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SearchView()
+//    }
+//}
+//

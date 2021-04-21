@@ -10,6 +10,9 @@ import Firebase
 import FirebaseAuth
 
 struct AddReviewView: View {
+    @Binding var tabSelection: Int
+    @Binding var current_course: String
+    
     @State private var course = ""
     @State private var professor = ""
     @State private var placeholder = "Here. Rant"
@@ -26,12 +29,12 @@ struct AddReviewView: View {
     @State private var alertText = ""
     @State private var allowSubmit = false
     
-    let grades = ["None",
-                     "A+", "A", "A-",
-                     "B+", "B", "B-",
-                     "C+", "C", "C-",
-                     "D+", "D", "D-",
-                     "F"]
+    let grades = ["None", "Pass", "Fail",
+                  "A+", "A", "A-",
+                  "B+", "B", "B-",
+                  "C+", "C", "C-",
+                  "D+", "D", "D-",
+                  "F"]
     
     let semesters = ["None", "Spring", "Fall", "Summer"]
     
@@ -49,6 +52,11 @@ struct AddReviewView: View {
                     Button(action: {
                         last_found = courseAutoComplete(course: course)
                         course = last_found
+                        if (last_found.isEmpty){
+                            alertTitle = "Course Not Found"
+                            alertText = "Sorry, we could not found the course you are looking for. Please try another one."
+                            showAlert = true
+                        }
                         validateReview()
                     }) {
                         Text("Find Course")
@@ -69,7 +77,7 @@ struct AddReviewView: View {
                     ForEach(grades, id: \.self) {
                         Text($0)
                     }
-
+                    
                 })
                 .frame(width: 100, alignment: .leading)
                 .pickerStyle(MenuPickerStyle())
@@ -88,7 +96,7 @@ struct AddReviewView: View {
                 }.padding()
                 
                 TextEditor(text: $text)
-                    .foregroundColor(self.text == placeholder ? .gray : .primary)
+                    .foregroundColor(self.text == placeholder ? Color("mutedColor"): .primary)
                     .onTapGesture {
                         if self.text == placeholder {
                             self.text = ""
@@ -110,13 +118,19 @@ struct AddReviewView: View {
                 
                 HStack{
                     Spacer()
-                    Button(action: {submitReview()}) {
+                    Button(action: {
+                        submitReview()
+                    }) {
                         Text("Add Review")
                     }.disabled(!allowSubmit)
                     Spacer()
                 }.padding()
                 
-            }
+            }.padding(.all, 16.0)
+        }.onAppear{
+            course = current_course
+            last_found = current_course
+            current_course = ""
         }
     }
     func addRating(r: Int){
@@ -173,7 +187,7 @@ struct AddReviewView: View {
             "text": "",
             "tags": "",
             "rating": rating]
-       
+        
         if selectedGrade != "Grade" {
             reviewDict["grade"] = selectedGrade
             
@@ -192,10 +206,11 @@ struct AddReviewView: View {
         
         let postCollection = db.collection("posts")
         
-       postCollection
+        
+        postCollection
             .whereField("author", isEqualTo: userRef)
             .whereField("course", isEqualTo: courseRef)
-        .getDocuments() { (querySnapshot, err) in
+            .getDocuments() { (querySnapshot, err) in
                 if let err = err {
                     print("Error getting documents: \(err)")
                 } else {
@@ -212,11 +227,13 @@ struct AddReviewView: View {
                         }
                         LoginState.userposts?.append(postRef.documentID as String)
                         print(postRef.documentID)
+                        self.current_course = last_found
+                        self.tabSelection = 1
                     } else {
                         exisitingReviewAlert()
                     }
                 }
-        }
+            }
         resetFields()
     }
     
@@ -241,8 +258,8 @@ class NumbersOnly: ObservableObject {
     }
 }
 
-struct AddReviewView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddReviewView()
-    }
-}
+//struct AddReviewView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AddReviewView()
+//    }
+//}
