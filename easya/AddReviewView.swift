@@ -226,8 +226,8 @@ struct AddReviewView: View {
                             LoginState.userposts = [String]()
                         }
                         LoginState.userposts?.append(postRef.documentID as String)
-                        print(postRef.documentID)
-                        self.current_course = last_found
+                        print(postRef.documentID, course)
+                        self.current_course = reviewDict["course_id"] as! String
                         self.tabSelection = 1
                     } else {
                         exisitingReviewAlert()
