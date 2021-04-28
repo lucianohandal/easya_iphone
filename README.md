@@ -150,6 +150,8 @@ The easyA app will allow Purdue Students to create and read reviews about their 
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
+[https://youtu.be/SlnhrG75RUg](https://youtu.be/SlnhrG75RUg)
+
+## GIF Walkthrough
 
 ![ ](final.gif)
